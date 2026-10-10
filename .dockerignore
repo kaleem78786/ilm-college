@@ -1,0 +1,9 @@
+.git
+.github
+docs
+qa
+*.pem
+*.key
+.env*
+*.md
+deploy.log

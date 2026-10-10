@@ -1,0 +1,11 @@
+services:
+  ilm-college:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ilm-college-web
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      - NODE_ENV=production

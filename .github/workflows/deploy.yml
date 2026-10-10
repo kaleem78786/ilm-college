@@ -36,6 +36,8 @@ jobs:
             "site/index.html"
             "site/style.css"
             "site/script.js"
+            "Dockerfile"
+            "docker-compose.yml"
             "deploy/setup-ec2.sh"
             "deploy/nginx.conf"
           )
@@ -45,7 +47,7 @@ jobs:
               exit 1
             fi
           done
-          echo "✓ All core website and deployment files are present."
+          echo "✓ All core website, Docker, and deployment files are present."
 
   # ------------------------------------------------------------------
   # STAGE 2: Security & Secrets Scan
@@ -95,14 +97,53 @@ jobs:
           echo "Verifying assets directory..."
           test -d site/assets || (echo "Missing site/assets directory" && exit 1)
           test -f site/assets/favicon.svg || (echo "Missing favicon" && exit 1)
+          test -f site/assets/library.webp || (echo "Missing hero image" && exit 1)
           echo "✓ Asset structure is intact."
 
   # ------------------------------------------------------------------
-  # STAGE 4: Automated Deployment to AWS EC2
+  # STAGE 4: Docker Container Build & Smoke Test
+  # ------------------------------------------------------------------
+  docker-build:
+    name: 4. Docker Build & Smoke Test
+    needs: [build-and-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Container Image
+        run: |
+          echo "Building Docker container image for ILM College..."
+          docker build -t ilm-college:latest .
+          echo "✓ Docker image built successfully."
+
+      - name: Test Docker Container Run
+        run: |
+          echo "Starting Docker container on port 8080..."
+          docker run -d --name ilm-test-container -p 8080:80 ilm-college:latest
+          sleep 4
+          echo "Testing container HTTP response..."
+          status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080)
+          if [ "$status" != "200" ]; then
+            echo "Error: Docker container responded with HTTP $status (Expected 200)"
+            docker logs ilm-test-container
+            exit 1
+          fi
+          echo "Testing container HTML content for ASAD BHUTTA..."
+          curl -s http://localhost:8080 | grep -q "ASAD BHUTTA"
+          echo "✓ Container smoke test passed: HTTP 200 OK & Creator content verified!"
+          docker stop ilm-test-container
+          docker rm ilm-test-container
+
+  # ------------------------------------------------------------------
+  # STAGE 5: Automated Deployment to AWS EC2
   # ------------------------------------------------------------------
   deploy:
-    name: 4. Deploy to AWS EC2
-    needs: [build-and-test]
+    name: 5. Deploy to AWS EC2
+    needs: [docker-build]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
@@ -142,7 +183,7 @@ jobs:
         run: |
           echo "Syncing code to EC2 upload directory..."
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "mkdir -p /home/${{ secrets.EC2_USER }}/ilm-college-upload"
-          scp -r site deploy ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USER }}/ilm-college-upload/
+          scp -r site deploy Dockerfile docker-compose.yml ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USER }}/ilm-college-upload/
           echo "✓ Files uploaded successfully."
 
       - name: Execute Deployment & Reload Nginx
@@ -152,10 +193,10 @@ jobs:
           echo "✓ Remote setup and Nginx reload complete."
 
   # ------------------------------------------------------------------
-  # STAGE 5: Live Production Health Check
+  # STAGE 6: Live Production Health Check
   # ------------------------------------------------------------------
   health-check:
-    name: 5. Live Production Health Check
+    name: 6. Live Production Health Check
     needs: [deploy]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
@@ -170,8 +211,9 @@ jobs:
           fi
           echo "✓ Server is responding with HTTP 200 OK."
 
-      - name: Verify Live Website Content
+      - name: Verify Live Website Content & Popup
         run: |
-          echo "Verifying website content..."
-          curl -s --max-time 15 http://${{ secrets.EC2_HOST }} | grep -q "ilm\."
-          echo "✓ ILM College brand content confirmed on production server!"
+          echo "Verifying updated website content & popup..."
+          curl -s --max-time 15 http://${{ secrets.EC2_HOST }} | grep -q "ASAD BHUTTA"
+          curl -s --max-time 15 http://${{ secrets.EC2_HOST }} | grep -q "creatorPopup"
+          echo "✓ Creator popup and all new features confirmed on live production server!"

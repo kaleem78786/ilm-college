@@ -5,65 +5,389 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Explore intermediate programs at ILM Group of Colleges in Pakistan. Find your study pathway and connect with the ILM head office.">
   <meta name="theme-color" content="#174b3c">
-  <title>ILM Colleges — Your next chapter</title>
+  <title>ILM Colleges — Your Next Chapter</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
 </head>
 <body>
+  <!-- Scroll Progress Indicator -->
+  <div id="scrollProgress" class="scroll-progress-bar" aria-hidden="true"></div>
+
+  <!-- Announcement Ticker -->
+  <aside class="announcement-bar" id="announcementBar" aria-label="Admissions announcement">
+    <div class="container announcement-inner">
+      <span class="announcement-pill">ADMISSIONS 2026–27</span>
+      <p class="announcement-text">Merit Scholarships up to 100% now open across all 50+ campuses nationwide!</p>
+      <a href="#scholarship-calc" class="announcement-link">Calculate Scholarship →</a>
+      <button class="announcement-close" id="announcementClose" type="button" aria-label="Close notification">✕</button>
+    </div>
+  </aside>
+
   <a class="skip-link" href="#main">Skip to content</a>
+
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="#home" aria-label="ILM Colleges home"><span class="brand-mark">ilm<span>.</span></span><span class="brand-name">GROUP OF<br>COLLEGES</span></a>
-      <button class="menu-toggle" type="button" aria-controls="navigation" aria-expanded="false" aria-label="Open navigation"><span></span><span></span></button>
-      <nav id="navigation" aria-label="Main navigation">
-        <a href="#about">About ILM</a><a href="#programs">Programs</a><a href="#admissions">Admissions</a>
-        <a class="nav-contact" href="#contact">Get in touch <span aria-hidden="true">↗</span></a>
-      </nav>
+      <a class="brand" href="#home" aria-label="ILM Colleges home">
+        <span class="brand-mark">ilm<span>.</span></span>
+        <span class="brand-name">GROUP OF<br>COLLEGES</span>
+      </a>
+
+      <div class="header-right">
+        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark/light mode">
+          <span class="theme-icon light-icon" aria-hidden="true">🌙</span>
+          <span class="theme-icon dark-icon" aria-hidden="true">☀️</span>
+        </button>
+
+        <button class="menu-toggle" type="button" aria-controls="navigation" aria-expanded="false" aria-label="Open navigation">
+          <span></span><span></span>
+        </button>
+
+        <nav id="navigation" aria-label="Main navigation">
+          <a href="#about">About ILM</a>
+          <a href="#programs">Programs</a>
+          <a href="#scholarship-calc">Scholarships</a>
+          <a href="#admissions">Admissions</a>
+          <a href="#faq">FAQs</a>
+          <a class="nav-contact" href="#contact">Get in touch <span aria-hidden="true">↗</span></a>
+        </nav>
+      </div>
     </div>
   </header>
 
   <main id="main">
+    <!-- Hero Section -->
     <section class="hero container" id="home" aria-labelledby="hero-title">
       <div class="hero-copy">
         <p class="eyebrow"><span class="tiny-line"></span> A WORLD OF POSSIBILITIES</p>
         <h1 id="hero-title">Your next<br>chapter starts<br> with <em>ILM.</em></h1>
         <p class="hero-description">Big ambitions begin with a strong foundation. Explore your path in science, technology and commerce with ILM Colleges, Pakistan.</p>
-        <div class="hero-actions"><a class="button" href="#programs">Explore programs <span aria-hidden="true">↗</span></a><a class="text-link" href="#admissions">How to apply <span aria-hidden="true">→</span></a></div>
-        <div class="hero-note"><span class="note-icon" aria-hidden="true">✦</span><span>Learn with purpose.<br><strong>Build a future that’s yours.</strong></span></div>
+
+        <div class="hero-actions">
+          <a class="button" href="#programs">Explore programs <span aria-hidden="true">↗</span></a>
+          <a class="text-link" href="#admissions">How to apply <span aria-hidden="true">→</span></a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-item"><span class="stat-number">50+</span><span class="stat-label">Campuses</span></div>
+          <div class="stat-item"><span class="stat-number">100k+</span><span class="stat-label">Alumni</span></div>
+          <div class="stat-item"><span class="stat-number">100%</span><span class="stat-label">Scholarships</span></div>
+        </div>
+
+        <div class="hero-note">
+          <span class="note-icon" aria-hidden="true">✦</span>
+          <span>Learn with purpose.<br><strong>Build a future that’s yours.</strong></span>
+        </div>
       </div>
+
       <figure class="hero-visual">
         <img src="assets/library.webp" width="1400" height="821" alt="Bookshelves and study spaces in an illustrative library" fetchpriority="high">
         <div class="image-shade"></div>
-        <figcaption><span class="image-kicker">THE JOURNEY BEGINS WITH YOU</span><p>A little curiosity.<br>A lot of possibility.</p><span class="photo-caption">Illustrative library photograph</span></figcaption>
+        <figcaption>
+          <span class="image-kicker">THE JOURNEY BEGINS WITH YOU</span>
+          <p>A little curiosity.<br>A lot of possibility.</p>
+          <span class="photo-caption">Illustrative library photograph</span>
+        </figcaption>
         <span class="image-corner" aria-hidden="true">↗</span>
       </figure>
     </section>
 
+    <!-- Intro Band -->
     <section class="intro-band" id="about" aria-labelledby="about-title">
-      <div class="container intro-inner"><p class="eyebrow">LEARN. GROW. LEAD.</p><h2 id="about-title">An education for the<br><em>person you want to become.</em></h2><p>ILM brings together academic learning and career direction. Discover a college community that encourages you to think, explore and take your next step with confidence.</p></div>
+      <div class="container intro-inner">
+        <p class="eyebrow">LEARN. GROW. LEAD.</p>
+        <h2 id="about-title">An education for the<br><em>person you want to become.</em></h2>
+        <p>ILM brings together academic learning and career direction. Discover a college community that encourages you to think, explore and take your next step with confidence.</p>
+      </div>
     </section>
 
+    <!-- Programs with Live Tabs and Search Filter -->
     <section class="programs container section-space" id="programs" aria-labelledby="programs-title">
-      <div class="section-heading"><div><p class="eyebrow">FIND YOUR DIRECTION</p><h2 id="programs-title">Small steps. <em>Big futures.</em></h2></div><p>Explore intermediate pathways.<br>Availability varies by campus.</p></div>
-      <div class="program-grid">
-        <article class="program-card"><div class="card-top"><span class="program-symbol" aria-hidden="true">✳</span><span class="card-number">01</span></div><p class="program-type">SCIENCE</p><h3>FSc Pre-Medical</h3><p>Start your journey into biology, science and the world of healthcare.</p><a href="mailto:info@ilm.edu.pk?subject=Enquiry%20about%20FSc%20Pre-Medical">Enquire about this program <span aria-hidden="true">↗</span></a></article>
-        <article class="program-card"><div class="card-top"><span class="program-symbol engineering" aria-hidden="true">⌘</span><span class="card-number">02</span></div><p class="program-type">SCIENCE</p><h3>FSc Pre-Engineering</h3><p>Build a foundation for a future in engineering and applied sciences.</p><a href="mailto:info@ilm.edu.pk?subject=Enquiry%20about%20FSc%20Pre-Engineering">Enquire about this program <span aria-hidden="true">↗</span></a></article>
-        <article class="program-card"><div class="card-top"><span class="program-symbol computer" aria-hidden="true">&lt;/&gt;</span><span class="card-number">03</span></div><p class="program-type">TECHNOLOGY</p><h3>ICS</h3><p>Turn your curiosity about computers into your next study pathway.</p><a href="mailto:info@ilm.edu.pk?subject=Enquiry%20about%20ICS">Enquire about this program <span aria-hidden="true">↗</span></a></article>
-        <article class="program-card"><div class="card-top"><span class="program-symbol commerce" aria-hidden="true">↗</span><span class="card-number">04</span></div><p class="program-type">COMMERCE</p><h3>ICom</h3><p>Discover the foundations of business, accounting and commerce.</p><a href="mailto:info@ilm.edu.pk?subject=Enquiry%20about%20ICom">Enquire about this program <span aria-hidden="true">↗</span></a></article>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">FIND YOUR DIRECTION</p>
+          <h2 id="programs-title">Small steps. <em>Big futures.</em></h2>
+        </div>
+        <p>Explore intermediate pathways.<br>Availability varies by campus.</p>
       </div>
+
+      <!-- Interactive Filter Controls -->
+      <div class="program-controls">
+        <div class="program-tabs" role="tablist" aria-label="Program categories">
+          <button class="tab-btn active" type="button" data-filter="all">All Pathways</button>
+          <button class="tab-btn" type="button" data-filter="SCIENCE">Science</button>
+          <button class="tab-btn" type="button" data-filter="TECHNOLOGY">Technology</button>
+          <button class="tab-btn" type="button" data-filter="COMMERCE">Commerce</button>
+        </div>
+        <div class="program-search-box">
+          <input type="text" id="programSearch" placeholder="Search program by name..." aria-label="Search programs">
+        </div>
+      </div>
+
+      <div class="program-grid" id="programGrid">
+        <article class="program-card" data-category="SCIENCE" data-name="FSc Pre-Medical biology medicine doctor healthcare">
+          <div class="card-top"><span class="program-symbol" aria-hidden="true">✳</span><span class="card-number">01</span></div>
+          <p class="program-type">SCIENCE</p>
+          <h3>FSc Pre-Medical</h3>
+          <p>Start your journey into biology, science and the world of healthcare and medical research.</p>
+          <a href="mailto:info@ilm.edu.pk?subject=Enquiry%20about%20FSc%20Pre-Medical">Enquire about this program <span aria-hidden="true">↗</span></a>
+        </article>
+
+        <article class="program-card" data-category="SCIENCE" data-name="FSc Pre-Engineering engineering maths physics technology">
+          <div class="card-top"><span class="program-symbol engineering" aria-hidden="true">⌘</span><span class="card-number">02</span></div>
+          <p class="program-type">SCIENCE</p>
+          <h3>FSc Pre-Engineering</h3>
+          <p>Build a foundation for a future in engineering, physical architecture and applied sciences.</p>
+          <a href="mailto:info@ilm.edu.pk?subject=Enquiry%20about%20FSc%20Pre-Engineering">Enquire about this program <span aria-hidden="true">↗</span></a>
+        </article>
+
+        <article class="program-card" data-category="TECHNOLOGY" data-name="ICS computer science coding programming software AI IT">
+          <div class="card-top"><span class="program-symbol computer" aria-hidden="true">&lt;/&gt;</span><span class="card-number">03</span></div>
+          <p class="program-type">TECHNOLOGY</p>
+          <h3>ICS</h3>
+          <p>Turn your curiosity about computers, AI and software development into your next study pathway.</p>
+          <a href="mailto:info@ilm.edu.pk?subject=Enquiry%20about%20ICS">Enquire about this program <span aria-hidden="true">↗</span></a>
+        </article>
+
+        <article class="program-card" data-category="COMMERCE" data-name="ICom commerce business accounting finance banking economics">
+          <div class="card-top"><span class="program-symbol commerce" aria-hidden="true">↗</span><span class="card-number">04</span></div>
+          <p class="program-type">COMMERCE</p>
+          <h3>ICom</h3>
+          <p>Discover the foundations of modern business, corporate accounting, fintech and commerce.</p>
+          <a href="mailto:info@ilm.edu.pk?subject=Enquiry%20about%20ICom">Enquire about this program <span aria-hidden="true">↗</span></a>
+        </article>
+      </div>
+
       <p class="program-footnote">Looking for another pathway? <a href="https://ilm.edu.pk/" target="_blank" rel="noopener noreferrer">See all programs on the official ILM website <span aria-hidden="true">↗</span></a></p>
     </section>
 
-    <section class="admissions-wrap" id="admissions" aria-labelledby="admissions-title">
-      <div class="container admissions-inner"><div class="admissions-copy"><p class="eyebrow">YOUR NEXT STEP</p><h2 id="admissions-title">A new beginning.<br><em>A clear way forward.</em></h2><p>Ready to explore ILM? Start with your preferred campus. Its admissions team can confirm program availability, eligibility, fees and dates.</p><a class="button button-light" href="https://ilm.edu.pk/ilm-network.php" target="_blank" rel="noopener noreferrer">Find your campus <span aria-hidden="true">↗</span></a></div><ol class="admission-steps"><li><span class="step-number">01</span><div><h3>Choose your direction</h3><p>Explore the programs that match your interests and goals.</p></div></li><li><span class="step-number">02</span><div><h3>Connect with your campus</h3><p>Ask the admissions office about requirements and available places.</p></div></li><li><span class="step-number">03</span><div><h3>Complete your application</h3><p>Visit the admissions office and submit the requested documents.</p></div></li></ol></div>
+    <!-- NEW FEATURE: Interactive Scholarship & Eligibility Calculator -->
+    <section class="calculator-section container section-space" id="scholarship-calc" aria-labelledby="calc-title">
+      <div class="calc-card">
+        <div class="calc-header">
+          <p class="eyebrow">INSTANT ADMISSION ESTIMATOR</p>
+          <h2 id="calc-title">Merit Scholarship & <em>Fee Calculator</em></h2>
+          <p>Drag the slider to your Matric percentage to instantly view your eligibility and scholarship bracket.</p>
+        </div>
+
+        <div class="calc-grid">
+          <div class="calc-form">
+            <div class="form-group">
+              <div class="label-row">
+                <label for="marksRange">Matric Percentage:</label>
+                <span class="slider-display" id="marksDisplay">85%</span>
+              </div>
+              <input type="range" id="marksRange" min="50" max="100" value="85" step="1" aria-label="Matric percentage slider">
+              <div class="slider-ticks">
+                <span>50%</span>
+                <span>65%</span>
+                <span>80%</span>
+                <span>100%</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="calcProgram">Desired Program:</label>
+              <select id="calcProgram">
+                <option value="FSc Pre-Medical">FSc Pre-Medical</option>
+                <option value="FSc Pre-Engineering">FSc Pre-Engineering</option>
+                <option value="ICS">ICS (Computer Science)</option>
+                <option value="ICom">I.Com (Commerce)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="calc-results-card" id="calcResults">
+            <div class="scholarship-tag" id="scholarshipTag">50% MERIT SCHOLARSHIP</div>
+            <h3 id="eligibilityHeading">Eligible with High Honors</h3>
+            <p id="eligibilityDetails">You qualify for a 50% tuition scholarship waiver across our nationwide ILM network!</p>
+            <div class="result-perks">
+              <span>✓ Priority Campus Admission</span>
+              <span>✓ Free Library & Lab Access</span>
+              <span>✓ Mentorship Guidance</span>
+            </div>
+            <a class="button button-calc" href="#contact">Apply for Scholarship <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </div>
     </section>
 
+    <!-- Admissions Steps -->
+    <section class="admissions-wrap" id="admissions" aria-labelledby="admissions-title">
+      <div class="container admissions-inner">
+        <div class="admissions-copy">
+          <p class="eyebrow">YOUR NEXT STEP</p>
+          <h2 id="admissions-title">A new beginning.<br><em>A clear way forward.</em></h2>
+          <p>Ready to explore ILM? Start with your preferred campus. Its admissions team can confirm program availability, eligibility, fees and dates.</p>
+          <a class="button button-light" href="https://ilm.edu.pk/ilm-network.php" target="_blank" rel="noopener noreferrer">Find your campus <span aria-hidden="true">↗</span></a>
+        </div>
+
+        <ol class="admission-steps">
+          <li>
+            <span class="step-number">01</span>
+            <div>
+              <h3>Choose your direction</h3>
+              <p>Explore the programs that match your interests, aptitude and career goals.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-number">02</span>
+            <div>
+              <h3>Connect with your campus</h3>
+              <p>Ask the admissions office about requirements, fee structures and available places.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-number">03</span>
+            <div>
+              <h3>Complete your application</h3>
+              <p>Visit the admissions office and submit the requested academic documents.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- NEW FEATURE: FAQ Accordion Section -->
+    <section class="faq-section container section-space" id="faq" aria-labelledby="faq-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">HELP & CLARIFICATION</p>
+          <h2 id="faq-title">Frequently Asked <em>Questions</em></h2>
+        </div>
+        <p>Everything you need to know<br>about joining ILM Colleges.</p>
+      </div>
+
+      <div class="faq-accordion">
+        <details class="faq-item" open>
+          <summary class="faq-question">
+            <span>What are the minimum eligibility criteria for admission?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </summary>
+          <div class="faq-answer">
+            <p>Students must have passed their Matriculation (SSC) or equivalent O-Levels. Minimum 60% marks are required for Science groups (Pre-Medical and Pre-Engineering), while minimum 50% marks are required for ICS and I.Com.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>Are need-based and kinships scholarships offered?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </summary>
+          <div class="faq-answer">
+            <p>Yes! In addition to top-tier merit scholarships (up to 100%), ILM Group of Colleges offers siblings (kinship) discounts, teacher's ward concessions, and orphan/financial aid allowances.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>Can I transfer from another college to ILM?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </summary>
+          <div class="faq-answer">
+            <p>Transfers are facilitated subject to seat availability, board NOC, and verification of intermediate Part-I marks from recognized BISE boards.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>What co-curricular and sports activities are available?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </summary>
+          <div class="faq-answer">
+            <p>Campuses host annual sports galas, science exhibitions, debate competitions, educational tours, and leadership youth clubs throughout the academic calendar.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
     <section class="contact container section-space" id="contact" aria-labelledby="contact-title">
-      <div class="contact-copy"><p class="eyebrow">LET’S TALK ABOUT YOUR FUTURE</p><h2 id="contact-title">Good questions.<br><em>Great beginnings.</em></h2><p>For general enquiries and campus guidance, connect with the ILM Group of Colleges head office.</p><a class="text-link" href="mailto:info@ilm.edu.pk">Email the head office <span aria-hidden="true">↗</span></a></div>
-      <div class="contact-details"><div><span class="contact-label">CALL US</span><a href="tel:+923028613416">0302 8613416 <span aria-hidden="true">↗</span></a></div><div><span class="contact-label">WRITE TO US</span><a href="mailto:info@ilm.edu.pk">info@ilm.edu.pk <span aria-hidden="true">↗</span></a></div><div><span class="contact-label">HEAD OFFICE</span><p>C-II, Johar Town, Lahore, Pakistan</p></div><div><span class="contact-label">OFFICE HOURS</span><p>Monday–Friday · 9:00 AM–5:00 PM</p></div></div>
+      <div class="contact-copy">
+        <p class="eyebrow">LET’S TALK ABOUT YOUR FUTURE</p>
+        <h2 id="contact-title">Good questions.<br><em>Great beginnings.</em></h2>
+        <p>For general enquiries and campus guidance, connect with the ILM Group of Colleges head office.</p>
+        <a class="text-link" href="mailto:info@ilm.edu.pk">Email the head office <span aria-hidden="true">↗</span></a>
+      </div>
+
+      <div class="contact-details">
+        <div>
+          <span class="contact-label">CALL US</span>
+          <a href="tel:+923028613416">0302 8613416 <span aria-hidden="true">↗</span></a>
+        </div>
+        <div>
+          <span class="contact-label">WRITE TO US</span>
+          <a href="mailto:info@ilm.edu.pk">info@ilm.edu.pk <span aria-hidden="true">↗</span></a>
+        </div>
+        <div>
+          <span class="contact-label">HEAD OFFICE</span>
+          <p>C-II, Johar Town, Lahore, Pakistan</p>
+        </div>
+        <div>
+          <span class="contact-label">OFFICE HOURS</span>
+          <p>Monday–Friday · 9:00 AM–5:00 PM</p>
+        </div>
+      </div>
     </section>
   </main>
-  <footer><div class="container footer-inner"><a class="brand footer-brand" href="#home"><span class="brand-mark">ilm<span>.</span></span><span class="brand-name">GROUP OF<br>COLLEGES</span></a><p class="credit-line"><a href="#home" aria-label="Made by ASAD BHUTTA from ILM College">Made by ASAD BHUTTA from ILM College</a></p><p>Independent website concept · <span id="year">2026</span></p><a href="https://ilm.edu.pk/" target="_blank" rel="noopener noreferrer">Official ILM website <span aria-hidden="true">↗</span></a><a class="back-top" href="#home" aria-label="Back to top">↑</a></div></footer>
+
+  <footer>
+    <div class="container footer-inner">
+      <a class="brand footer-brand" href="#home">
+        <span class="brand-mark">ilm<span>.</span></span>
+        <span class="brand-name">GROUP OF<br>COLLEGES</span>
+      </a>
+      <p class="credit-line">
+        <a href="#home" aria-label="Made by ASAD BHUTTA from ILM College">Made by ASAD BHUTTA from ILM College</a>
+      </p>
+      <p>Independent website concept · <span id="year">2026</span></p>
+      <a href="https://ilm.edu.pk/" target="_blank" rel="noopener noreferrer">Official ILM website <span aria-hidden="true">↗</span></a>
+      <a class="back-top" href="#home" aria-label="Back to top">↑</a>
+    </div>
+  </footer>
+
+  <!-- WhatsApp Floating Widget -->
+  <aside class="whatsapp-float-wrap" aria-label="WhatsApp quick chat">
+    <a href="https://wa.me/923028613416?text=Assalam-o-Alaikum!%20I%20am%20interested%20in%20ILM%20College%20Admissions." target="_blank" rel="noopener noreferrer" class="whatsapp-btn" aria-label="Chat on WhatsApp">
+      <span class="whatsapp-icon" aria-hidden="true">💬</span>
+      <span class="whatsapp-tooltip">Chat with ILM on WhatsApp</span>
+    </a>
+  </aside>
+
+  <!-- BEAUTIFUL POPUP ON EVERY REFRESH: Made by ASAD BHUTTA from ILM College -->
+  <div id="creatorPopup" class="creator-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+    <div class="creator-modal-card">
+      <button type="button" class="creator-modal-close" id="popupCloseBtn" aria-label="Close creator popup">✕</button>
+
+      <div class="popup-badge">
+        <span class="badge-star" aria-hidden="true">★</span>
+        <span>DEVELOPER SHOWCASE</span>
+      </div>
+
+      <div class="creator-avatar-ring">
+        <div class="creator-avatar-initials">AB</div>
+      </div>
+
+      <h2 id="popupTitle" class="popup-title">
+        Made by <span class="highlight-name">ASAD BHUTTA</span>
+      </h2>
+      <p class="popup-subtitle">from <strong>ILM College</strong></p>
+
+      <p class="popup-desc">
+        Crafted with modern responsive design, automated CI/CD deployment, and high-performance interactive features.
+      </p>
+
+      <div class="popup-actions">
+        <button type="button" class="button popup-btn-primary" id="popupExploreBtn">
+          Explore Website 🚀
+        </button>
+        <a href="https://wa.me/923028613416?text=Hi%20Asad%20Bhutta!%20Great%20job%20on%20the%20ILM%20College%20Website!" target="_blank" rel="noopener noreferrer" class="button popup-btn-secondary">
+          Say Hello 👋
+        </a>
+      </div>
+
+      <p class="popup-foot">Designed with passion · Refreshes on every reload</p>
+    </div>
+  </div>
 </body>
 </html>
