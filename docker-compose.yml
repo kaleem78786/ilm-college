@@ -3,9 +3,21 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        SITE_REVISION: ${SITE_REVISION:-local}
     container_name: ilm-college-web
-    restart: always
+    restart: unless-stopped
     ports:
-      - "8080:80"
-    environment:
-      - NODE_ENV=production
+      - "127.0.0.1:8080:80"
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

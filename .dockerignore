@@ -7,3 +7,9 @@ qa
 .env*
 *.md
 deploy.log
+node_modules
+dist
+test-results
+playwright-report
+tests
+package*.json

@@ -7,26 +7,54 @@ document.addEventListener('DOMContentLoaded', () => {
   const creatorPopup = document.getElementById('creatorPopup');
   const popupCloseBtn = document.getElementById('popupCloseBtn');
   const popupExploreBtn = document.getElementById('popupExploreBtn');
+  const popupOpenBtn = document.getElementById('popupOpenBtn');
+  let popupPreviousFocus;
+  let previousOverflow = '';
+  const backgroundState = new Map();
+
+  function focusCreatorPopup() {
+    if (creatorPopup?.classList.contains('is-active')) popupCloseBtn?.focus({ preventScroll: true });
+  }
 
   function openCreatorPopup() {
-    if (!creatorPopup) return;
-    // Slight delay for smooth visual transition after page load
-    setTimeout(() => {
-      creatorPopup.classList.add('is-active');
-      document.body.style.overflow = 'hidden';
-    }, 250);
+    if (!creatorPopup || creatorPopup.classList.contains('is-active')) return;
+    popupPreviousFocus = document.activeElement;
+    previousOverflow = document.body.style.overflow;
+    for (const element of document.body.children) {
+      if (element === creatorPopup || element.tagName === 'SCRIPT') continue;
+      backgroundState.set(element, element.inert);
+      element.inert = true;
+    }
+    creatorPopup.setAttribute('aria-hidden', 'false');
+    creatorPopup.classList.add('is-active');
+    creatorPopup.showModal();
+    creatorPopup.querySelector('.creator-modal-card')?.scrollTo(0, 0);
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(focusCreatorPopup);
   }
 
   function closeCreatorPopup() {
-    if (!creatorPopup) return;
+    if (!creatorPopup || !creatorPopup.classList.contains('is-active')) return;
     creatorPopup.classList.remove('is-active');
-    document.body.style.overflow = '';
+    creatorPopup.setAttribute('aria-hidden', 'true');
+    creatorPopup.close();
+    document.body.style.overflow = previousOverflow;
+    for (const [element, wasInert] of backgroundState) element.inert = wasInert;
+    backgroundState.clear();
+    const focusTarget = popupPreviousFocus === document.body
+      ? document.querySelector('.site-header .brand') : popupPreviousFocus;
+    focusTarget?.focus({ preventScroll: true });
   }
 
   if (popupCloseBtn) popupCloseBtn.addEventListener('click', closeCreatorPopup);
   if (popupExploreBtn) popupExploreBtn.addEventListener('click', closeCreatorPopup);
+  if (popupOpenBtn) popupOpenBtn.addEventListener('click', openCreatorPopup);
 
   if (creatorPopup) {
+    creatorPopup.addEventListener('cancel', event => {
+      event.preventDefault();
+      closeCreatorPopup();
+    });
     creatorPopup.addEventListener('click', (event) => {
       if (event.target === creatorPopup) closeCreatorPopup();
     });
@@ -39,13 +67,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // 2. SCROLL PROGRESS BAR
   // -----------------------------------------------------------------
   const scrollProgressBar = document.getElementById('scrollProgress');
-  window.addEventListener('scroll', () => {
+  function updateScrollProgress() {
     if (!scrollProgressBar) return;
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
     const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
     scrollProgressBar.style.width = `${progress}%`;
-  }, { passive: true });
+  }
+  window.addEventListener('scroll', updateScrollProgress, { passive: true });
+  window.addEventListener('resize', updateScrollProgress);
+  updateScrollProgress();
 
   // -----------------------------------------------------------------
   // 3. ANNOUNCEMENT TOP BAR DISMISS
@@ -55,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (announcementClose && announcementBar) {
     announcementClose.addEventListener('click', () => {
       announcementBar.style.display = 'none';
+      updateScrollProgress();
     });
   }
 
@@ -62,21 +94,29 @@ document.addEventListener('DOMContentLoaded', () => {
   // 4. DARK / LIGHT THEME TOGGLE
   // -----------------------------------------------------------------
   const themeToggle = document.getElementById('themeToggle');
-  const savedTheme = localStorage.getItem('ilm_theme');
+  // Storage can be disabled in private browsers and embedded previews.
+  let savedTheme;
+  try { savedTheme = localStorage.getItem('ilm_theme'); } catch { /* Keep the default theme. */ }
   if (savedTheme === 'dark') {
     document.documentElement.setAttribute('data-theme', 'dark');
   }
 
+  function updateThemeButton() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    themeToggle?.setAttribute('aria-pressed', String(isDark));
+    themeToggle?.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+  }
+  updateThemeButton();
   if (themeToggle) {
     themeToggle.addEventListener('click', () => {
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
       if (isDark) {
         document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('ilm_theme', 'light');
       } else {
         document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('ilm_theme', 'dark');
       }
+      try { localStorage.setItem('ilm_theme', isDark ? 'light' : 'dark'); } catch { /* Toggling still works. */ }
+      updateThemeButton();
     });
   }
 
@@ -86,11 +126,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const tabButtons = document.querySelectorAll('.tab-btn');
   const programSearch = document.getElementById('programSearch');
   const programCards = document.querySelectorAll('.program-card');
+  const programStatus = document.getElementById('programStatus');
 
   let currentCategory = 'all';
 
   function filterPrograms() {
     const query = (programSearch ? programSearch.value : '').trim().toLowerCase();
+    let visibleCount = 0;
 
     programCards.forEach(card => {
       const category = card.getAttribute('data-category') || '';
@@ -102,16 +144,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (matchesCategory && matchesSearch) {
         card.classList.remove('is-hidden');
+        visibleCount += 1;
       } else {
         card.classList.add('is-hidden');
       }
     });
+    if (programStatus) {
+      programStatus.textContent = visibleCount
+        ? `${visibleCount} ${visibleCount === 1 ? 'program' : 'programs'} found.`
+        : 'No programs match. Try another search or select All Pathways.';
+      programStatus.classList.toggle('empty', visibleCount === 0);
+    }
+    updateScrollProgress();
   }
 
   tabButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      tabButtons.forEach(b => b.classList.remove('active'));
+      tabButtons.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
       btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
       currentCategory = btn.getAttribute('data-filter') || 'all';
       filterPrograms();
     });
@@ -120,6 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (programSearch) {
     programSearch.addEventListener('input', filterPrograms);
   }
+  filterPrograms();
 
   // -----------------------------------------------------------------
   // 6. INTERACTIVE SCHOLARSHIP CALCULATOR
@@ -139,26 +194,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (marksDisplay) marksDisplay.textContent = `${marks}%`;
 
     if (marks >= 90) {
-      if (scholarshipTag) scholarshipTag.textContent = '🌟 100% MERIT SCHOLARSHIP';
-      if (eligibilityHeading) eligibilityHeading.textContent = `Full Free-Ship in ${prog}`;
-      if (eligibilityDetails) eligibilityDetails.textContent = `Outstanding! With ${marks}%, you qualify for 100% tuition waiver across all ILM campuses nationwide.`;
+      if (scholarshipTag) scholarshipTag.textContent = '🌟 ILLUSTRATIVE 100% BRACKET';
+      if (eligibilityHeading) eligibilityHeading.textContent = `100% example for ${prog}`;
     } else if (marks >= 80) {
-      if (scholarshipTag) scholarshipTag.textContent = '🏆 50% MERIT SCHOLARSHIP';
-      if (eligibilityHeading) eligibilityHeading.textContent = `50% Fee Waiver in ${prog}`;
-      if (eligibilityDetails) eligibilityDetails.textContent = `Excellent achievement! With ${marks}%, you qualify for a 50% fee concession and priority hostel reservation.`;
+      if (scholarshipTag) scholarshipTag.textContent = '🏆 ILLUSTRATIVE 50% BRACKET';
+      if (eligibilityHeading) eligibilityHeading.textContent = `50% example for ${prog}`;
     } else if (marks >= 70) {
-      if (scholarshipTag) scholarshipTag.textContent = '🏅 25% MERIT SCHOLARSHIP';
-      if (eligibilityHeading) eligibilityHeading.textContent = `25% Fee Concession in ${prog}`;
-      if (eligibilityDetails) eligibilityDetails.textContent = `Great score! With ${marks}%, you are eligible for 25% scholarship plus sports and talent quota evaluation.`;
+      if (scholarshipTag) scholarshipTag.textContent = '🏅 ILLUSTRATIVE 25% BRACKET';
+      if (eligibilityHeading) eligibilityHeading.textContent = `25% example for ${prog}`;
     } else if (marks >= 60) {
-      if (scholarshipTag) scholarshipTag.textContent = '✓ ELIGIBLE FOR ADMISSION';
-      if (eligibilityHeading) eligibilityHeading.textContent = `Standard Admission in ${prog}`;
-      if (eligibilityDetails) eligibilityDetails.textContent = `You meet the admission criteria for ${prog}. Kinship and special installments available upon campus visit.`;
+      if (scholarshipTag) scholarshipTag.textContent = 'ADMISSION ENQUIRY';
+      if (eligibilityHeading) eligibilityHeading.textContent = `Explore ${prog}`;
     } else {
-      if (scholarshipTag) scholarshipTag.textContent = 'ℹ️ PROVISIONAL ADMISSION';
-      if (eligibilityHeading) eligibilityHeading.textContent = `Subject to Interview in ${prog}`;
-      if (eligibilityDetails) eligibilityDetails.textContent = `Contact your nearest ILM campus for guidance counselling and program seat availability.`;
+      if (scholarshipTag) scholarshipTag.textContent = 'CAMPUS GUIDANCE';
+      if (eligibilityHeading) eligibilityHeading.textContent = `Ask about ${prog}`;
     }
+    if (eligibilityDetails) eligibilityDetails.textContent = `At ${marks}%, this demonstration provides an illustrative result only. Your campus must confirm actual admission criteria, scholarship rates, fees and available places for ${prog}.`;
   }
 
   if (marksRange) marksRange.addEventListener('input', updateCalculator);
@@ -192,8 +243,25 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   document.addEventListener('keydown', event => {
+    if (creatorPopup?.classList.contains('is-active')) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeCreatorPopup();
+      } else if (event.key === 'Tab') {
+        const focusable = [...creatorPopup.querySelectorAll('button, a[href]')];
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }
+      return;
+    }
     if (event.key === 'Escape') {
-      closeCreatorPopup();
       if (toggle && toggle.getAttribute('aria-expanded') === 'true') {
         setMenu(false);
         toggle.focus();
@@ -207,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  window.matchMedia('(min-width: 761px)').addEventListener('change', event => {
+  window.matchMedia('(min-width: 1051px)').addEventListener('change', event => {
     if (event.matches) setMenu(false);
   });
 

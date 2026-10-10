@@ -1,8 +1,87 @@
 # ILM College — EC2 deployment guide (Roman Urdu)
 
-Yeh chhoti static website hai: HTML, CSS aur JavaScript. Database, Node.js ya paid theme ki zaroorat nahi. Website EC2 par Nginx serve karega. Yeh reproducible deployment instructions hain; actual deployment aur HTTPS verification ka latest status [README.md](../README.md) mein dekhein.
+**Current deployment Docker + GitHub Actions hai.** Source `site/` mein hai; Docker build hashed CSS/JS aur `version.txt` banata hai. EC2 ka host Nginx HTTPS terminate karke `127.0.0.1:8080` container ko proxy karta hai. Database ki zaroorat nahi. Latest status [README.md](../README.md) aur [GitHub Actions](https://github.com/kaleem78786/ilm-college/actions) mein dekhein; neeche pehle current workflow, phir purana manual method archive hai.
 
-## Aapke existing EC2 ka quick start
+## Current Docker deployment
+
+Existing server **54.81.201.196**, SSH user **ubuntu**, domain **lunphudi.com** hai. EC2 par Docker Engine **29.9.0** install hua hai; domain ka Let's Encrypt certificate available hai. Sirf Docker CLI install hona daemon running hone ka proof nahi.
+
+**Laptop/local project:**
+
+```bash
+cd /home/kaleem/new-project/ilm-college
+docker info
+docker compose up --build -d
+```
+
+http://localhost:8080 open karein. Compose localhost port bind karta hai; EC2 security group mein port 8080 public open karne ki zaroorat nahi. Linux par permission error ho to Docker commands `sudo` se chalayein. Daemon/Compose missing ho to [official Ubuntu Docker installation](https://docs.docker.com/engine/install/ubuntu/) aur [Compose plugin guide](https://docs.docker.com/compose/install/linux/) follow karein.
+
+**Local checks, container running ho:**
+
+```bash
+npm ci
+npm run test:static
+npx playwright install chromium
+BASE_URL=http://127.0.0.1:8080 npm run test:browser
+```
+
+Node.js 22+ local tooling ke liye hai. `npm run build` optional local `dist/` banata hai; Docker apna production build khud karta hai. Edits ke baad container rebuild karein. Production files `dist/` directly edit na karein.
+
+## CI/CD: push se deployment
+
+Repository: [kaleem78786/ilm-college](https://github.com/kaleem78786/ilm-college). GitHub → Settings → Secrets and variables → Actions mein:
+
+| Repository secret | Value |
+| --- | --- |
+| `EC2_HOST` | `54.81.201.196` |
+| `EC2_USER` | `ubuntu` |
+| `EC2_SSH_KEY` | `first-test.pem` ka complete content, sirf secret field mein |
+| `EC2_KNOWN_HOSTS` | Isi IP ki verified SSH host-key entry |
+
+Optional variable `SITE_URL=https://lunphudi.com`. Host fingerprint AWS console/system log se verify karein; sirf `ssh-keyscan` output ko bina verification trusted na maan lein. Key repository, Docker image, ZIP ya docs mein paste na karein. Workflow AWS access keys use nahi karta; existing unrelated account secrets unchanged reh sakte hain. [GitHub Actions secrets](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets).
+
+**EC2 requirements:** host Nginx/TLS pehle configured ho, Docker daemon running ho, `ubuntu` ka `sudo -n true` pass ho, HTTP 80/HTTPS 443 allowed hon aur SSH 22 runner se reachable ho. Laptop-only **My IP** rule GitHub-hosted runner ko allow nahi karta; approved runner network access ya fixed-address runner chahiye.
+
+```bash
+git status
+git add site/ scripts/ tests/ deploy/ Dockerfile docker-compose.yml package.json package-lock.json README.md docs/ .github/
+git commit -m "Update college website"
+git push origin main
+```
+
+Workflow har push/PR par HTML/assets/syntax, Docker build aur browser checks karta hai. Current `main` par checks pass hon to exact tested image artifact + SHA256 checksum EC2 transfer hota hai. `deploy/deploy-image.sh` candidate verify karta hai, container switch karta hai aur host proxy apply karta hai; failed deployment par previous container/proxy restore hota hai. Slow old commit newer `main` release ko replace nahi karta. Har deployment ka result Actions run aur live revision se verify karein.
+
+```bash
+git rev-parse HEAD
+curl -fsS -H 'Cache-Control: no-cache' "https://lunphudi.com/version.txt?check=$(date +%s)"
+```
+
+Dono full commit SHA same hone chahiye. Browser popup har refresh par aana chahiye. Git push successful hona deployment successful hone ka proof nahi.
+
+**EC2 logs/checks:**
+
+```bash
+ssh -i ~/Downloads/first-test.pem ubuntu@54.81.201.196
+sudo -n docker ps
+sudo -n docker logs --tail 50 ilm-college-web
+curl -fsS http://127.0.0.1:8080/version.txt
+sudo nginx -t
+sudo systemctl status nginx --no-pager
+```
+
+Manual recovery/deployment sirf exact release artifact se: same directory mein `image.tar`, `image.tar.sha256`, `deploy-image.sh`, `nginx-container-proxy.conf` hon. `COMMIT_SHA` ko full 40-character Git SHA se replace karein:
+
+```bash
+bash /absolute/release/deploy-image.sh /absolute/release/image.tar ilm-college:COMMIT_SHA COMMIT_SHA
+```
+
+CI production container manage karta hai; normal update ke liye main push use karein. Host certificate renewal hook `deploy/reload-nginx.sh` Nginx reload karta hai; ACME route `/var/www/ilm-college/.well-known/acme-challenge/` se retained hai. Cloudflare **Full (strict)** dashboard setting abhi verified nahi. `www` DNS aur certificate expansion ke baad hi configure hoga.
+
+## Archived manual static deployment
+
+Neeche pehle version ki Ubuntu/Nginx instructions retained hain, including instance creation, costs, domain aur certificate bootstrap. **Current Docker production updates ke liye `setup-ec2.sh`/manual source copy use na karein.** Fresh host par Nginx/TLS bootstrap ke baad current CI Docker proxy apply karta hai.
+
+### Previous static deployment quick start
 
 Aapka server **54.81.201.196**, domain **lunphudi.com**, aur SSH key **`~/Downloads/first-test.pem`** hai. Naya EC2 banane ki zaroorat nahi. Key local Downloads mein rehni chahiye; ZIP, website ya server par upload na karein.
 

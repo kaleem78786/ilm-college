@@ -17,9 +17,9 @@
   <!-- Announcement Ticker -->
   <aside class="announcement-bar" id="announcementBar" aria-label="Admissions announcement">
     <div class="container announcement-inner">
-      <span class="announcement-pill">ADMISSIONS 2026–27</span>
-      <p class="announcement-text">Merit Scholarships up to 100% now open across all 50+ campuses nationwide!</p>
-      <a href="#scholarship-calc" class="announcement-link">Calculate Scholarship →</a>
+      <span class="announcement-pill">PLAN YOUR NEXT STEP</span>
+      <p class="announcement-text">Explore programs and ask your campus about admissions and scholarships.</p>
+      <a href="#scholarship-calc" class="announcement-link">Explore Scholarship Estimator →</a>
       <button class="announcement-close" id="announcementClose" type="button" aria-label="Close notification">✕</button>
     </div>
   </aside>
@@ -34,7 +34,7 @@
       </a>
 
       <div class="header-right">
-        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark/light mode">
+        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">
           <span class="theme-icon light-icon" aria-hidden="true">🌙</span>
           <span class="theme-icon dark-icon" aria-hidden="true">☀️</span>
         </button>
@@ -69,9 +69,9 @@
         </div>
 
         <div class="hero-stats">
-          <div class="stat-item"><span class="stat-number">50+</span><span class="stat-label">Campuses</span></div>
-          <div class="stat-item"><span class="stat-number">100k+</span><span class="stat-label">Alumni</span></div>
-          <div class="stat-item"><span class="stat-number">100%</span><span class="stat-label">Scholarships</span></div>
+          <div class="stat-item"><span class="stat-number">4</span><span class="stat-label">Featured programs</span></div>
+          <div class="stat-item"><span class="stat-number">3</span><span class="stat-label">Study areas</span></div>
+          <div class="stat-item"><span class="stat-number">ILM</span><span class="stat-label">Campus guidance</span></div>
         </div>
 
         <div class="hero-note">
@@ -113,17 +113,18 @@
 
       <!-- Interactive Filter Controls -->
       <div class="program-controls">
-        <div class="program-tabs" role="tablist" aria-label="Program categories">
-          <button class="tab-btn active" type="button" data-filter="all">All Pathways</button>
-          <button class="tab-btn" type="button" data-filter="SCIENCE">Science</button>
-          <button class="tab-btn" type="button" data-filter="TECHNOLOGY">Technology</button>
-          <button class="tab-btn" type="button" data-filter="COMMERCE">Commerce</button>
+        <div class="program-tabs" role="group" aria-label="Program categories">
+          <button class="tab-btn active" type="button" data-filter="all" aria-pressed="true" aria-controls="programGrid">All Pathways</button>
+          <button class="tab-btn" type="button" data-filter="SCIENCE" aria-pressed="false" aria-controls="programGrid">Science</button>
+          <button class="tab-btn" type="button" data-filter="TECHNOLOGY" aria-pressed="false" aria-controls="programGrid">Technology</button>
+          <button class="tab-btn" type="button" data-filter="COMMERCE" aria-pressed="false" aria-controls="programGrid">Commerce</button>
         </div>
         <div class="program-search-box">
-          <input type="text" id="programSearch" placeholder="Search program by name..." aria-label="Search programs">
+          <input type="search" id="programSearch" placeholder="Search program by name..." aria-label="Search programs" aria-controls="programGrid" autocomplete="off">
         </div>
       </div>
 
+      <p id="programStatus" class="program-status" role="status" aria-live="polite">4 programs found.</p>
       <div class="program-grid" id="programGrid">
         <article class="program-card" data-category="SCIENCE" data-name="FSc Pre-Medical biology medicine doctor healthcare">
           <div class="card-top"><span class="program-symbol" aria-hidden="true">✳</span><span class="card-number">01</span></div>
@@ -165,9 +166,9 @@
     <section class="calculator-section container section-space" id="scholarship-calc" aria-labelledby="calc-title">
       <div class="calc-card">
         <div class="calc-header">
-          <p class="eyebrow">INSTANT ADMISSION ESTIMATOR</p>
-          <h2 id="calc-title">Merit Scholarship & <em>Fee Calculator</em></h2>
-          <p>Drag the slider to your Matric percentage to instantly view your eligibility and scholarship bracket.</p>
+          <p class="eyebrow">ILLUSTRATIVE SCHOLARSHIP ESTIMATOR</p>
+          <h2 id="calc-title">Merit Scholarship <em>Estimator</em></h2>
+          <p>Drag the slider to explore sample scholarship brackets. This demonstration is not an official ILM policy or an admission offer. Confirm actual rates, fees and eligibility with your preferred campus.</p>
         </div>
 
         <div class="calc-grid">
@@ -197,16 +198,16 @@
             </div>
           </div>
 
-          <div class="calc-results-card" id="calcResults">
-            <div class="scholarship-tag" id="scholarshipTag">50% MERIT SCHOLARSHIP</div>
-            <h3 id="eligibilityHeading">Eligible with High Honors</h3>
-            <p id="eligibilityDetails">You qualify for a 50% tuition scholarship waiver across our nationwide ILM network!</p>
+          <div class="calc-results-card" id="calcResults" role="status" aria-live="polite" aria-atomic="true">
+            <div class="scholarship-tag" id="scholarshipTag">ILLUSTRATIVE 50% BRACKET</div>
+            <h3 id="eligibilityHeading">50% example for FSc Pre-Medical</h3>
+            <p id="eligibilityDetails">Illustrative result only. Your campus must confirm admission criteria, scholarships, fees and available places.</p>
             <div class="result-perks">
-              <span>✓ Priority Campus Admission</span>
-              <span>✓ Free Library & Lab Access</span>
-              <span>✓ Mentorship Guidance</span>
+              <span>✓ Ask about admission eligibility</span>
+              <span>✓ Confirm tuition and concessions</span>
+              <span>✓ Check program availability</span>
             </div>
-            <a class="button button-calc" href="#contact">Apply for Scholarship <span aria-hidden="true">↗</span></a>
+            <a class="button button-calc" href="#contact">Ask about scholarships <span aria-hidden="true">↗</span></a>
           </div>
         </div>
       </div>
@@ -265,17 +266,17 @@
             <span class="faq-icon" aria-hidden="true">+</span>
           </summary>
           <div class="faq-answer">
-            <p>Students must have passed their Matriculation (SSC) or equivalent O-Levels. Minimum 60% marks are required for Science groups (Pre-Medical and Pre-Engineering), while minimum 50% marks are required for ICS and I.Com.</p>
+            <p>Entry requirements depend on the program, examination board and campus. Contact your preferred campus to confirm required marks, documents and any equivalence requirements before applying.</p>
           </div>
         </details>
 
         <details class="faq-item">
           <summary class="faq-question">
-            <span>Are need-based and kinships scholarships offered?</span>
+            <span>How can I ask about scholarships and concessions?</span>
             <span class="faq-icon" aria-hidden="true">+</span>
           </summary>
           <div class="faq-answer">
-            <p>Yes! In addition to top-tier merit scholarships (up to 100%), ILM Group of Colleges offers siblings (kinship) discounts, teacher's ward concessions, and orphan/financial aid allowances.</p>
+            <p>Ask your campus which merit scholarships, financial assistance or sibling concessions are currently available, how to apply and which supporting documents are required.</p>
           </div>
         </details>
 
@@ -285,7 +286,7 @@
             <span class="faq-icon" aria-hidden="true">+</span>
           </summary>
           <div class="faq-answer">
-            <p>Transfers are facilitated subject to seat availability, board NOC, and verification of intermediate Part-I marks from recognized BISE boards.</p>
+            <p>Contact the campus admissions team about transfer availability and your examination board's requirements. They can confirm whether your academic records and transfer documents meet the current criteria.</p>
           </div>
         </details>
 
@@ -295,7 +296,7 @@
             <span class="faq-icon" aria-hidden="true">+</span>
           </summary>
           <div class="faq-answer">
-            <p>Campuses host annual sports galas, science exhibitions, debate competitions, educational tours, and leadership youth clubs throughout the academic calendar.</p>
+            <p>Activities and facilities vary by campus. Ask your preferred campus about its current sports, societies, events and student opportunities.</p>
           </div>
         </details>
       </div>
@@ -325,7 +326,7 @@
         </div>
         <div>
           <span class="contact-label">OFFICE HOURS</span>
-          <p>Monday–Friday · 9:00 AM–5:00 PM</p>
+          <p>Contact the office to confirm visiting hours.</p>
         </div>
       </div>
     </section>
@@ -338,7 +339,7 @@
         <span class="brand-name">GROUP OF<br>COLLEGES</span>
       </a>
       <p class="credit-line">
-        <a href="#home" aria-label="Made by ASAD BHUTTA from ILM College">Made by ASAD BHUTTA from ILM College</a>
+        <button type="button" class="creator-credit-button" id="popupOpenBtn" aria-haspopup="dialog" aria-controls="creatorPopup">Made by ASAD BHUTTA from ILM College</button>
       </p>
       <p>Independent website concept · <span id="year">2026</span></p>
       <a href="https://ilm.edu.pk/" target="_blank" rel="noopener noreferrer">Official ILM website <span aria-hidden="true">↗</span></a>
@@ -346,18 +347,18 @@
     </div>
   </footer>
 
-  <!-- WhatsApp Floating Widget -->
-  <aside class="whatsapp-float-wrap" aria-label="WhatsApp quick chat">
-    <a href="https://wa.me/923028613416?text=Assalam-o-Alaikum!%20I%20am%20interested%20in%20ILM%20College%20Admissions." target="_blank" rel="noopener noreferrer" class="whatsapp-btn" aria-label="Chat on WhatsApp">
-      <span class="whatsapp-icon" aria-hidden="true">💬</span>
-      <span class="whatsapp-tooltip">Chat with ILM on WhatsApp</span>
+  <!-- Head-office quick contact -->
+  <aside class="whatsapp-float-wrap" aria-label="Head-office quick call">
+    <a href="tel:+923028613416" class="whatsapp-btn" aria-label="Call ILM head office">
+      <span class="whatsapp-icon" aria-hidden="true">☎</span>
+      <span class="whatsapp-tooltip">Call ILM head office</span>
     </a>
   </aside>
 
   <!-- BEAUTIFUL POPUP ON EVERY REFRESH: Made by ASAD BHUTTA from ILM College -->
-  <div id="creatorPopup" class="creator-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+  <dialog id="creatorPopup" class="creator-modal-backdrop" aria-modal="true" aria-labelledby="popupTitle" aria-describedby="popupDescription" aria-hidden="true">
     <div class="creator-modal-card">
-      <button type="button" class="creator-modal-close" id="popupCloseBtn" aria-label="Close creator popup">✕</button>
+      <button type="button" class="creator-modal-close" id="popupCloseBtn" aria-label="Close creator popup" autofocus>✕</button>
 
       <div class="popup-badge">
         <span class="badge-star" aria-hidden="true">★</span>
@@ -373,7 +374,7 @@
       </h2>
       <p class="popup-subtitle">from <strong>ILM College</strong></p>
 
-      <p class="popup-desc">
+      <p class="popup-desc" id="popupDescription">
         Crafted with modern responsive design, automated CI/CD deployment, and high-performance interactive features.
       </p>
 
@@ -381,13 +382,13 @@
         <button type="button" class="button popup-btn-primary" id="popupExploreBtn">
           Explore Website 🚀
         </button>
-        <a href="https://wa.me/923028613416?text=Hi%20Asad%20Bhutta!%20Great%20job%20on%20the%20ILM%20College%20Website!" target="_blank" rel="noopener noreferrer" class="button popup-btn-secondary">
-          Say Hello 👋
+        <a href="mailto:info@ilm.edu.pk" class="button popup-btn-secondary">
+          Contact ILM ✉
         </a>
       </div>
 
       <p class="popup-foot">Designed with passion · Refreshes on every reload</p>
     </div>
-  </div>
+  </dialog>
 </body>
 </html>
