@@ -1,0 +1,67 @@
+{
+  "checked": "2026-10-10",
+  "pages": [
+    {
+      "width": 1440,
+      "pageWidth": 1440,
+      "title": "ILM Colleges — Your next chapter",
+      "h1": 1,
+      "imagesLoaded": true,
+      "fontsLoaded": true,
+      "anchorsValid": true,
+      "invalidElements": 0
+    },
+    {
+      "width": 1024,
+      "pageWidth": 1024,
+      "title": "ILM Colleges — Your next chapter",
+      "h1": 1,
+      "imagesLoaded": true,
+      "fontsLoaded": true,
+      "anchorsValid": true,
+      "invalidElements": 0
+    },
+    {
+      "width": 768,
+      "pageWidth": 768,
+      "title": "ILM Colleges — Your next chapter",
+      "h1": 1,
+      "imagesLoaded": true,
+      "fontsLoaded": true,
+      "anchorsValid": true,
+      "invalidElements": 0
+    },
+    {
+      "width": 760,
+      "pageWidth": 760,
+      "title": "ILM Colleges — Your next chapter",
+      "h1": 1,
+      "imagesLoaded": true,
+      "fontsLoaded": true,
+      "anchorsValid": true,
+      "invalidElements": 0
+    },
+    {
+      "width": 390,
+      "pageWidth": 390,
+      "title": "ILM Colleges — Your next chapter",
+      "h1": 1,
+      "imagesLoaded": true,
+      "fontsLoaded": true,
+      "anchorsValid": true,
+      "invalidElements": 0
+    },
+    {
+      "width": 320,
+      "pageWidth": 320,
+      "title": "ILM Colleges — Your next chapter",
+      "h1": 1,
+      "imagesLoaded": true,
+      "fontsLoaded": true,
+      "anchorsValid": true,
+      "invalidElements": 0
+    }
+  ],
+  "failures": [],
+  "mobileMenu": "open, Escape, navigate passed"
+}

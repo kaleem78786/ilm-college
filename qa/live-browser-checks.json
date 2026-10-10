@@ -1,0 +1,17 @@
+{
+  "url": "https://lunphudi.com",
+  "date": "2026-10-10",
+  "checks": [
+    {
+      "width": 1440,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "status": 200,
+      "overflow": false
+    }
+  ],
+  "errors": []
+}

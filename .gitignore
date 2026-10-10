@@ -1,0 +1,7 @@
+*.pem
+*.key
+.env
+.env.*
+node_modules/
+*.zip
+deploy.log
