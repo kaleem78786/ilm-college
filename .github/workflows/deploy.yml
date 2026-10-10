@@ -109,6 +109,28 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Verify AWS Connection & Instance Status
+        run: |
+          echo "Verifying AWS identity..."
+          aws sts get-caller-identity
+          echo "Checking EC2 instance state for ${{ secrets.EC2_HOST }}..."
+          state=$(aws ec2 describe-instances \
+            --filters "Name=ip-address,Values=${{ secrets.EC2_HOST }}" \
+            --query "Reservations[0].Instances[0].State.Name" --output text)
+          echo "EC2 instance status: $state"
+          if [ "$state" != "running" ]; then
+            echo "Error: EC2 instance is not in running state (found: $state)"
+            exit 1
+          fi
+          echo "✓ EC2 instance is healthy and running."
+
       - name: Configure SSH Key
         run: |
           mkdir -p ~/.ssh
